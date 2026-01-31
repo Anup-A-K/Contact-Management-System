@@ -36,8 +36,10 @@ export default function ContactItem({ contact, onEdit, refresh }) {
         <p><strong>Notes:</strong> {contact.notes}</p>
       )}
 
-      <button onClick={() => onEdit(contact)}>Edit</button>
-      <button onClick={handleDelete}>Delete</button>
+          <div className="card-buttons">
+          <button onClick={() => onEdit(contact)}>Edit</button>
+            <button className="delete" onClick={handleDelete}>Delete</button>
+        </div>
     </div>
   );
 }

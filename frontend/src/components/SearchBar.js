@@ -10,7 +10,7 @@ export default function SearchBar({ onSearch }) {
   };
 
   return (
-    <div style={{ marginBottom: "15px" }}>
+    <div className="search-container">
       <input
         type="text"
         placeholder="Search by name, email, company, or tags"

@@ -111,9 +111,23 @@ export default function ContactForm({ editing, setEditing, refresh }) {
         onChange={handleChange}
       />
 
-      <button type="submit">
-        {editing ? "Update Contact" : "Add Contact"}
-      </button>
+        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+          <button type="submit" style={{ flex: "1", minWidth: "120px" }}>
+            {editing ? "Update Contact" : "Add Contact"}
+          </button>
+          {editing && (
+            <button 
+              type="button" 
+              onClick={() => {
+                setForm(emptyForm);
+                setEditing(null);
+              }}
+              style={{ flex: "1", minWidth: "120px", backgroundColor: "#6c757d", color: "white" }}
+            >
+              Cancel
+            </button>
+          )}
+        </div>
     </form>
   );
 }
