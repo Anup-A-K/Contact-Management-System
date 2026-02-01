@@ -1,119 +1,127 @@
-import { useEffect, useState } from "react";
-import API from "../services/api";
+import React, { useEffect, useState } from 'react';
 
-const emptyForm = {
-  name: "",
-  email: "",
-  phone: "",
-  company: "",
-  tags: "",
-  notes: ""
-};
+function validateEmail(email) {
+  // Simple RFC-like regex for basic validation
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
 
-export default function ContactForm({ editing, setEditing, refresh }) {
-  const [form, setForm] = useState(emptyForm);
+export default function ContactForm({ onSave, onCancel, initialData }) {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [company, setCompany] = useState('');
+  const [tags, setTags] = useState('');
+  const [notes, setNotes] = useState('');
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (editing) {
-      setForm({
-        name: editing.name || "",
-        email: editing.email || "",
-        phone: editing.phone || "",
-        company: editing.company || "",
-        tags: editing.tags || "",
-        notes: editing.notes || ""
-      });
+    if (initialData) {
+      setName(initialData.name || '');
+      setEmail(initialData.email || '');
+      setPhone(initialData.phone || '');
+      setCompany(initialData.company || '');
+      setTags((initialData.tags || []).join(', '));
+      setNotes(initialData.notes || '');
+    } else {
+      setName('');
+      setEmail('');
+      setPhone('');
+      setCompany('');
+      setTags('');
+      setNotes('');
     }
-  }, [editing]);
+    setErrors({});
+  }, [initialData]);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
+    const newErrors = {};
+    if (!name.trim()) newErrors.name = 'Name is required';
+    if (!email.trim()) newErrors.email = 'Email is required';
+    else if (!validateEmail(email)) newErrors.email = 'Invalid email';
+    if (!phone.trim()) newErrors.phone = 'Phone is required';
 
-    if (!form.name || !form.email || !form.phone) {
-      alert("Name, Email and Phone are required");
-      return;
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length) return;
+
+    const contact = {
+      id: initialData?.id,
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      company: company.trim(),
+      tags: tags
+        .split(',')
+        .map((t) => t.trim())
+        .filter(Boolean),
+      notes: notes.trim(),
+    };
+
+    onSave(contact);
+    // Reset only when adding (not editing)
+    if (!initialData) {
+      setName('');
+      setEmail('');
+      setPhone('');
+      setCompany('');
+      setTags('');
+      setNotes('');
     }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(form.email)) {
-      alert("Invalid email format");
-      return;
-    }
-
-    try {
-      if (editing) {
-        await API.put(`/contacts/${editing._id}`, form);
-      } else {
-        await API.post("/contacts", form);
-      }
-
-      setForm(emptyForm);
-      setEditing(null);
-      refresh();
-    } catch (err) {
-      alert("Something went wrong");
-      console.error(err);
-    }
-  };
+  }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>{editing ? "Edit Contact" : "Add Contact"}</h2>
+    <form className="contact-form" onSubmit={handleSubmit} noValidate>
+      <div className="form-row">
+        <div className="form-group">
+          <label>Name *</label>
+          <input value={name} onChange={(e) => setName(e.target.value)} />
+          {errors.name && <div className="error">{errors.name}</div>}
+        </div>
 
-      <input
-        type="text"
-        name="name"
-        placeholder="Name *"
-        value={form.name}
-        onChange={handleChange}
-      />
+        <div className="form-group">
+          <label>Email *</label>
+          <input value={email} onChange={(e) => setEmail(e.target.value)} />
+          {errors.email && <div className="error">{errors.email}</div>}
+        </div>
+      </div>
 
-      <input
-        type="email"
-        name="email"
-        placeholder="Email *"
-        value={form.email}
-        onChange={handleChange}
-      />
+      <div className="form-row">
+        <div className="form-group">
+          <label>Phone *</label>
+          <input value={phone} onChange={(e) => setPhone(e.target.value)} />
+          {errors.phone && <div className="error">{errors.phone}</div>}
+        </div>
 
-      <input
-        type="text"
-        name="phone"
-        placeholder="Phone *"
-        value={form.phone}
-        onChange={handleChange}
-      />
+        <div className="form-group">
+          <label>Company</label>
+          <input value={company} onChange={(e) => setCompany(e.target.value)} />
+        </div>
+      </div>
 
-      <input
-        type="text"
-        name="company"
-        placeholder="Company"
-        value={form.company}
-        onChange={handleChange}
-      />
+      <div className="form-row">
+        <div className="form-group full">
+          <label>Tags (comma separated)</label>
+          <input value={tags} onChange={(e) => setTags(e.target.value)} />
+        </div>
+      </div>
 
-      <input
-        type="text"
-        name="tags"
-        placeholder="Tags (comma separated)"
-        value={form.tags}
-        onChange={handleChange}
-      />
+      <div className="form-row">
+        <div className="form-group full">
+          <label>Notes</label>
+          <textarea value={notes} onChange={(e) => setNotes(e.target.value)} />
+        </div>
+      </div>
 
-      <textarea
-        name="notes"
-        placeholder="Notes"
-        value={form.notes}
-        onChange={handleChange}
-      />
-
-      <button type="submit">
-        {editing ? "Update Contact" : "Add Contact"}
-      </button>
+      <div className="form-actions">
+        <button type="submit" className="btn primary">
+          {initialData ? 'Update Contact' : 'Add Contact'}
+        </button>
+        {initialData && (
+          <button type="button" className="btn" onClick={onCancel}>
+            Cancel
+          </button>
+        )}
+      </div>
     </form>
   );
 }
