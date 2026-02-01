@@ -1,88 +1,122 @@
 # Contact Management System
 
-A full-stack contact management application built with modern web technologies.
+A full-stack contact management application with a React frontend and Express.js backend, powered by MongoDB.
 
 ## Tech Stack
 
-- **Frontend**: React.js, CSS3
-- **Backend**: Node.js, Express.js
+- **Backend**: Node.js, Express.js, MongoDB with Mongoose
+- **Frontend**: React, Create React App
 - **Database**: MongoDB
-- **API**: RESTful API with JSON
 - **Package Manager**: npm
 
-## Steps to Run Locally
+## Prerequisites
 
-### Prerequisites
-- Node.js installed
-- MongoDB installed and running
-- npm (comes with Node.js)
+- Node.js
+- MongoDB
+- npm
 
-### Backend Setup
+## Installation
 
-1. Navigate to the backend directory:
-```bash
-cd backend
-```
+## Installation
 
-2. Install dependencies:
-```bash
-npm install
-```
+1. Clone the repository:
+   ```bash
+   cd backend
+   npm install
+   ```
 
-3. Start the backend server:
-```bash
-npm run dev
-```
+2. Install frontend dependencies:
+   ```bash
+   cd ../frontend
+   npm install
+   ```ning the Application Locally
 
-The backend will run on `http://localhost:5000`
+### Starting MongoDB
 
-You should see:
-```
-✓ Backend server running on http://localhost:5000
-✓ Connected to MongoDB
-```
+Before running the backend, ensure MongoDB is running on your machine:
 
-### Frontend Setup
+**Windows (PowerShell)**:
+```powershell
+## Running the Application
 
-1. Open a new terminal and navigate to the frontend directory:
-```bash
-cd frontend
-```
+### Start MongoDB
 
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Start the frontend application:
-```bash
-npm start
-```
-
-The frontend will automatically open at `http://localhost:3000`
-
-### MongoDB Setup
-
-Ensure MongoDB is running before starting the backend:
 ```bash
 mongod
 ```
 
+### Start Backend
+
+```bash
+cd backend
+npm run dev
+```
+
+The backend will run on `http://localhost:3001`
+
+### Start Frontend
+
+In a new terminal:
+
+```bash
+cd frontend
+npm start
+```
+
+The frontend will run on `http://localhost:3000`─ server.js           # Express server setup and API routes
+│   └── node_modules/
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── App.js          # Main app component
+│   │   ├── App.css
+│   │   ├── index.js
+│   │   ├── components/
+│   │   │   ├── ContactForm.js    # Form for creating/editing contacts
+│   │   │   └── ContactList.js    # Display contacts
+│   │   └── utils/
+│   │       ├── api.js            # API calls to backend
+│   │       └── storage.js        # LocalStorage utilities
+│   ├── package.json
+│   ├── build/              # Production build (generated)
+│   └── node_modules/
+└── README.md
+```
+
 ## Features
 
-- ✅ Add, edit, and delete contacts
-- ✅ Search contacts by name, email, company, or tags
-- ✅ Persistent storage in MongoDB
-- ✅ Real-time synchronization between frontend and backend
-- ✅ Input validation
-- ✅ Responsive design
-- ✅ Alphabetical sorting of contacts
+- **Create Contacts**: Add new contacts with name, email, phone, tags, and company
+- **View Contacts**: Browse all contacts in a list with search functionality
+- **Update Contacts**: Edit existing contact information
+- **Delete Contacts**: Remove contacts from the system
+- **Search**: Filter contacts by name, tags, company, and more
+- **Recently Searched**: Track recently searched queries
+- **Persistent Storage**: All data is stored in MongoDB
 
 ## API Endpoints
 
-- `GET /api/contacts` - Retrieve all contacts
-- `GET /api/contacts/:id` - Retrieve a single contact
+### Contacts
+- `GET /api/contacts` - Fetch all contacts
 - `POST /api/contacts` - Create a new contact
+- `GET /api/contacts/:id` - Get a specific contact
 - `PUT /api/contacts/:id` - Update a contact
-- `DELETE /api/contacts/:id` - Delete a contact
-- `GET /api/health` - Health check
+## Features
+
+- Create, read, update, and delete contacts
+- Search contacts by name, tags, and company
+- Recently searched history
+- Persistent storage with MongoDB
+- `npm run dev` - Run the server with nodemon (auto-reload on file changes)
+
+### Frontend
+- `npm start` - Start development server
+- `npm build` - Create a production build
+- `npm test` - Run tests
+
+## License
+
+ISC
+
+## Support
+
+For issues or questions, please create an issue in the repository.
