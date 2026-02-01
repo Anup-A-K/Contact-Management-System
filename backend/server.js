@@ -42,13 +42,9 @@ const contactSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
+  notes: {
+    type: String,
+    default: '',
   },
 });
 
@@ -82,7 +78,9 @@ app.get('/api/contacts/:id', async (req, res) => {
 // POST create contact
 app.post('/api/contacts', async (req, res) => {
   try {
-    const { name, email, phone, company, tags } = req.body;
+    const { name, email, phone, company, tags, notes } = req.body;
+    
+    console.log('POST /api/contacts received:', { name, email, phone, company, tags, notes });
 
     if (!name || !email) {
       return res.status(400).json({ error: 'Name and email are required' });
@@ -94,6 +92,7 @@ app.post('/api/contacts', async (req, res) => {
       phone,
       company,
       tags,
+      notes,
     });
 
     const saved = await contact.save();
@@ -106,7 +105,7 @@ app.post('/api/contacts', async (req, res) => {
 // PUT update contact
 app.put('/api/contacts/:id', async (req, res) => {
   try {
-    const { name, email, phone, company, tags } = req.body;
+    const { name, email, phone, company, tags, notes } = req.body;
 
     if (!name || !email) {
       return res.status(400).json({ error: 'Name and email are required' });
@@ -120,7 +119,7 @@ app.put('/api/contacts/:id', async (req, res) => {
         phone,
         company,
         tags,
-        updatedAt: Date.now(),
+        notes,
       },
       { new: true, runValidators: true }
     );
