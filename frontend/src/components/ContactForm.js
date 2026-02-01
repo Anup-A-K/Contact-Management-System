@@ -1,26 +1,35 @@
 import React, { useEffect, useState } from 'react';
 
+// Validation Functions
 function validateEmail(email) {
-  // Simple RFC-like regex for basic validation
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  // Check if email has format: something@something.something
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailPattern.test(email);
 }
 
 function validatePhone(phone) {
-  // Validate exactly 10 digits, integers only
-  return /^\d{10}$/.test(phone);
+  // Check if phone is exactly 10 digits (numbers only)
+  const phonePattern = /^\d{10}$/;
+  return phonePattern.test(phone);
 }
 
+// Main Form Component
 export default function ContactForm({ onSave, onCancel, initialData }) {
+  // State for form fields
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [company, setCompany] = useState('');
   const [tags, setTags] = useState('');
   const [notes, setNotes] = useState('');
+  
+  // State for validation errors
   const [errors, setErrors] = useState({});
 
+  // Initialize form with data (when editing) or clear (when adding new)
   useEffect(() => {
     if (initialData) {
+      // Fill form with existing contact data
       setName(initialData.name || '');
       setEmail(initialData.email || '');
       setPhone(initialData.phone || '');
@@ -28,6 +37,7 @@ export default function ContactForm({ onSave, onCancel, initialData }) {
       setTags((initialData.tags || []).join(', '));
       setNotes(initialData.notes || '');
     } else {
+      // Clear all fields for new contact
       setName('');
       setEmail('');
       setPhone('');
@@ -35,47 +45,70 @@ export default function ContactForm({ onSave, onCancel, initialData }) {
       setTags('');
       setNotes('');
     }
+    // Clear any previous errors
     setErrors({});
   }, [initialData]);
 
-  // Live email validation
+  // Check email validity while user types
   useEffect(() => {
-    if (email.trim()) {
-      if (!validateEmail(email)) {
-        setErrors((prev) => ({ ...prev, email: 'Invalid email format' }));
-      } else {
-        setErrors((prev) => ({ ...prev, email: null }));
-      }
+    if (email.trim() === '') {
+      // Empty email - clear error
+      setErrors((prev) => ({ ...prev, email: null }));
+    } else if (!validateEmail(email)) {
+      // Invalid email format - show error
+      setErrors((prev) => ({ ...prev, email: 'Invalid email format' }));
     } else {
+      // Valid email - clear error
       setErrors((prev) => ({ ...prev, email: null }));
     }
   }, [email]);
 
-  // Live phone validation
+  // Check phone validity while user types
   useEffect(() => {
-    if (phone.trim()) {
-      if (!validatePhone(phone)) {
-        setErrors((prev) => ({ ...prev, phone: 'Phone must be exactly 10 digits' }));
-      } else {
-        setErrors((prev) => ({ ...prev, phone: null }));
-      }
+    if (phone.trim() === '') {
+      // Empty phone - clear error
+      setErrors((prev) => ({ ...prev, phone: null }));
+    } else if (!validatePhone(phone)) {
+      // Invalid phone (not exactly 10 digits) - show error
+      setErrors((prev) => ({ ...prev, phone: 'Phone must be exactly 10 digits' }));
     } else {
+      // Valid phone - clear error
       setErrors((prev) => ({ ...prev, phone: null }));
     }
   }, [phone]);
 
+  // Handle form submission
   function handleSubmit(e) {
     e.preventDefault();
+    
+    // Validate all required fields
     const newErrors = {};
-    if (!name.trim()) newErrors.name = 'Name is required';
-    if (!email.trim()) newErrors.email = 'Email is required';
-    else if (!validateEmail(email)) newErrors.email = 'Invalid email';
-    if (!phone.trim()) newErrors.phone = 'Phone is required';
-    else if (!validatePhone(phone)) newErrors.phone = 'Phone must be exactly 10 digits';
+    
+    if (!name.trim()) {
+      newErrors.name = 'Name is required';
+    }
+    
+    if (!email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!validateEmail(email)) {
+      newErrors.email = 'Invalid email';
+    }
+    
+    if (!phone.trim()) {
+      newErrors.phone = 'Phone is required';
+    } else if (!validatePhone(phone)) {
+      newErrors.phone = 'Phone must be exactly 10 digits';
+    }
 
+    // Update errors state
     setErrors(newErrors);
-    if (Object.keys(newErrors).length) return;
+    
+    // Stop if there are any errors
+    if (Object.keys(newErrors).length > 0) {
+      return;
+    }
 
+    // Prepare contact data for saving
     const contact = {
       id: initialData?.id,
       name: name.trim(),
@@ -89,8 +122,10 @@ export default function ContactForm({ onSave, onCancel, initialData }) {
       notes: notes.trim(),
     };
 
+    // Save contact
     onSave(contact);
-    // Reset only when adding (not editing)
+    
+    // Clear form only when adding new contact (not when editing)
     if (!initialData) {
       setName('');
       setEmail('');
@@ -103,6 +138,7 @@ export default function ContactForm({ onSave, onCancel, initialData }) {
 
   return (
     <form className="contact-form" onSubmit={handleSubmit} noValidate>
+      {/* Name and Email Row */}
       <div className="form-row">
         <div className="form-group">
           <label>Name *</label>
@@ -121,14 +157,18 @@ export default function ContactForm({ onSave, onCancel, initialData }) {
         </div>
       </div>
 
+      {/* Phone and Company Row */}
       <div className="form-row">
         <div className="form-group">
           <label>Phone *</label>
           <input 
             value={phone} 
             onChange={(e) => {
-              const value = e.target.value.replace(/\D/g, '');
-              setPhone(value.slice(0, 10));
+              // Remove any non-digit characters
+              let digitsOnly = e.target.value.replace(/\D/g, '');
+              // Keep only first 10 digits
+              digitsOnly = digitsOnly.slice(0, 10);
+              setPhone(digitsOnly);
             }}
             maxLength="10"
             placeholder="10-digit number"
@@ -143,6 +183,7 @@ export default function ContactForm({ onSave, onCancel, initialData }) {
         </div>
       </div>
 
+      {/* Tags Row */}
       <div className="form-row">
         <div className="form-group full">
           <label>Tags (comma separated)</label>
@@ -150,6 +191,7 @@ export default function ContactForm({ onSave, onCancel, initialData }) {
         </div>
       </div>
 
+      {/* Notes Row */}
       <div className="form-row">
         <div className="form-group full">
           <label>Notes</label>
@@ -157,6 +199,7 @@ export default function ContactForm({ onSave, onCancel, initialData }) {
         </div>
       </div>
 
+      {/* Form Action Buttons */}
       <div className="form-actions">
         <button type="submit" className="btn primary">
           {initialData ? 'Update Contact' : 'Add Contact'}
