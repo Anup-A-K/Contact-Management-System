@@ -109,34 +109,44 @@ function App() {
           </div>
         ) : (
           <>
-            <ContactForm onSave={handleSave} onCancel={handleCancel} initialData={editing} />
+            <div className="main-grid">
+              <div className="left-pane">
+                <div className="pane-card">
+                  <ContactForm onSave={handleSave} onCancel={handleCancel} initialData={editing} />
+                </div>
+              </div>
 
-            <div className="list-header">
-              <input
-                className="search-input"
-                placeholder="Search name, email, company, or tags..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-                          <select 
-                            className="filter-select"
-                            value={filterType}
-                            onChange={(e) => setFilterType(e.target.value)}
-                          >
-                            <option value="all">All Fields</option>
-                            <option value="name">Name</option>
-                            <option value="tags">Tags</option>
-                            <option value="company">Company</option>
-                          </select>
+              <div className="right-pane">
+                <div className="pane-card">
+                  <div className="list-header">
+                    <input
+                      className="search-input"
+                      placeholder="Search name, email, company, or tags..."
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                    <select 
+                      className="filter-select"
+                      value={filterType}
+                      onChange={(e) => setFilterType(e.target.value)}
+                    >
+                      <option value="all">All Fields</option>
+                      <option value="name">Name</option>
+                      <option value="tags">Tags</option>
+                      <option value="company">Company</option>
+                    </select>
+                  </div>
+
+                  <ContactList
+                    contacts={contacts}
+                    query={query}
+                    filterType={filterType}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                  />
+                </div>
+              </div>
             </div>
-
-            <ContactList
-              contacts={contacts}
-              query={query}
-                            filterType={filterType}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
           </>
         )}
       </div>
