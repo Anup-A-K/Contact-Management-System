@@ -41,41 +41,43 @@ export default function ContactList({ contacts, query, onEdit, onDelete }) {
   return (
     <div className="contact-list">
       {visible.map((c) => (
-        <div className="contact-card" key={c.id}>
-          <div className="contact-avatar" style={{ background: stringToColor(c.name) }}>
-            {getInitials(c.name)}
-          </div>
-
-          <div className="contact-main">
-            <div className="contact-name">{c.name}</div>
-            <div className="contact-meta">
-              <span className="muted">{c.email}</span>
-              <span className="dot">•</span>
-              <span className="muted">{c.phone}</span>
-              {c.company ? (
-                <>
-                  <span className="dot">•</span>
-                  <span className="muted">{c.company}</span>
-                </>
-              ) : null}
+        <div className="contact-card" key={c._id}>
+          <div className="contact-info-wrapper">
+            <div className="contact-avatar" style={{ background: stringToColor(c.name) }}>
+              {getInitials(c.name)}
             </div>
-            {c.tags && c.tags.length ? (
-              <div className="tags">
-                {c.tags.map((t, i) => (
-                  <span className="tag" key={i}>
-                    {t}
-                  </span>
-                ))}
+
+            <div className="contact-main">
+              <div className="contact-name">{c.name}</div>
+              <div className="contact-meta">
+                <span className="muted">{c.email}</span>
+                <span className="dot">•</span>
+                <span className="muted">{c.phone}</span>
+                {c.company ? (
+                  <>
+                    <span className="dot">•</span>
+                    <span className="muted">{c.company}</span>
+                  </>
+                ) : null}
               </div>
-            ) : null}
-            {c.notes ? <div className="notes">{c.notes}</div> : null}
+              {c.tags && c.tags.length ? (
+                <div className="tags">
+                  {c.tags.map((t, i) => (
+                    <span className="tag" key={i}>
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
+              {c.notes ? <div className="notes">{c.notes}</div> : null}
+            </div>
           </div>
 
           <div className="contact-actions">
             <button className="btn subtle" onClick={() => onEdit(c)} aria-label={`Edit ${c.name}`}>
               ✏️ Edit
             </button>
-            <button className="btn danger" onClick={() => onDelete(c.id)} aria-label={`Delete ${c.name}`}>
+            <button className="btn danger" onClick={() => onDelete(c._id)} aria-label={`Delete ${c.name}`}>
               🗑️ Delete
             </button>
           </div>

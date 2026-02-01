@@ -110,7 +110,7 @@ export default function ContactForm({ onSave, onCancel, initialData }) {
 
     // Prepare contact data for saving
     const contact = {
-      id: initialData?.id,
+      _id: initialData?._id,
       name: name.trim(),
       email: email.trim(),
       phone: phone.trim(),
