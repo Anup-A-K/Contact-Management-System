@@ -26,9 +26,25 @@ function matchesQuery(contact, q) {
   if ((contact.tags || []).some((t) => t.toLowerCase().includes(s))) return true;
   return false;
 }
+function matchesFilter(contact, q, filterType) {
+  if (!q) return true;
+  const s = q.trim().toLowerCase();
+  if (!s) return true;
 
-export default function ContactList({ contacts, query, onEdit, onDelete }) {
-  const visible = useMemo(() => contacts.filter((c) => matchesQuery(c, query)), [contacts, query]);
+  if (filterType === 'all') {
+    return matchesQuery(contact, q);
+  } else if (filterType === 'name') {
+    return contact.name.toLowerCase().includes(s);
+  } else if (filterType === 'tags') {
+    return (contact.tags || []).some((t) => t.toLowerCase().includes(s));
+  } else if (filterType === 'company') {
+    return (contact.company || '').toLowerCase().includes(s);
+  }
+  return true;
+}
+
+export default function ContactList({ contacts, query, filterType, onEdit, onDelete }) {
+  const visible = useMemo(() => contacts.filter((c) => matchesFilter(c, query, filterType)), [contacts, query, filterType]);
 
   if (!contacts || contacts.length === 0) {
     return <div className="empty">No contacts yet. Add a contact to get started.</div>;

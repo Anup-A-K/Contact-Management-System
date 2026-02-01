@@ -10,6 +10,7 @@ function App() {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filterType, setFilterType] = useState('all'); // all, name, tags, company
 
   // Load contacts from backend on mount
   useEffect(() => {
@@ -117,11 +118,22 @@ function App() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
+                          <select 
+                            className="filter-select"
+                            value={filterType}
+                            onChange={(e) => setFilterType(e.target.value)}
+                          >
+                            <option value="all">All Fields</option>
+                            <option value="name">Name</option>
+                            <option value="tags">Tags</option>
+                            <option value="company">Company</option>
+                          </select>
             </div>
 
             <ContactList
               contacts={contacts}
               query={query}
+                            filterType={filterType}
               onEdit={handleEdit}
               onDelete={handleDelete}
             />
