@@ -25,7 +25,7 @@ A full-stack contact management application with a React frontend and Express.js
 
 2. Install frontend dependencies:
    ```powershell
-   cd ../frontend
+   cd frontend
    npm install
    ```
 
