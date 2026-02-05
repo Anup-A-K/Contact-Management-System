@@ -59,16 +59,21 @@ The frontend will run on `http://localhost:3000`
 
 ## Features
 
-- Create, read, update, and delete contacts
-- Search contacts by name, tags, and company
-- Recently searched history
-- Persistent storage with MongoDB
-## Features
 
 - Create, read, update, and delete contacts
-- Search contacts by name, tags, and company
-- Recently searched history
 - Persistent storage with MongoDB
+
+## Quick Start with start.bat
+
+For Windows users, there is a convenient `start.bat` script that automates the startup process:
+
+1. Ensure MongoDB is running
+2. Double-click `start.bat` in the project root directory
+3. Two command windows will open automatically:
+   - One running the backend server (http://localhost:5000)
+   - One running the frontend development server (http://localhost:3000)
+
+This script eliminates the need to open multiple terminals manually.
 - `npm start` - Run the server with nodemon (auto-reload on file changes)
 
 ### Frontend
