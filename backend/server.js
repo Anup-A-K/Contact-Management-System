@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/contact-management';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017 /contact-management';
 
 mongoose.connect(MONGO_URI)
   .then(() => {

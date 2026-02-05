@@ -53,5 +53,3 @@ export async function deleteContact(id) {
     throw err;
   }
 }
-
-export default { fetchContacts, createContact, updateContact, deleteContact };

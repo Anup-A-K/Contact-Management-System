@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 
 // Validation Functions
 function validateEmail(email) {
-  // Check if email has format: something@something.something
+  // email validation
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailPattern.test(email);
 }
 
 function validatePhone(phone) {
-  // Check if phone is exactly 10 digits (numbers only)
+  // phone is exactly 10 digits (numbers only)
   const phonePattern = /^\d{10}$/;
   return phonePattern.test(phone);
 }
@@ -26,7 +26,7 @@ export default function ContactForm({ onSave, onCancel, initialData }) {
   // State for validation errors
   const [errors, setErrors] = useState({});
 
-  // Initialize form with data (when editing) or clear (when adding new)
+  // Initialize form with data
   useEffect(() => {
     if (initialData) {
       // Fill form with existing contact data
@@ -199,32 +199,6 @@ export default function ContactForm({ onSave, onCancel, initialData }) {
         </div>
       </div>
 
-<<<<<<< HEAD
-      <textarea
-        name="notes"
-        placeholder="Notes"
-        value={form.notes}
-        onChange={handleChange}
-      />
-
-        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-          <button type="submit" style={{ flex: "1", minWidth: "120px" }}>
-            {editing ? "Update Contact" : "Add Contact"}
-          </button>
-          {editing && (
-            <button 
-              type="button" 
-              onClick={() => {
-                setForm(emptyForm);
-                setEditing(null);
-              }}
-              style={{ flex: "1", minWidth: "120px", backgroundColor: "#6c757d", color: "white" }}
-            >
-              Cancel
-            </button>
-          )}
-        </div>
-=======
       {/* Form Action Buttons */}
       <div className="form-actions">
         <button type="submit" className="btn primary">
@@ -236,7 +210,6 @@ export default function ContactForm({ onSave, onCancel, initialData }) {
           </button>
         )}
       </div>
->>>>>>> new
     </form>
   );
 }
