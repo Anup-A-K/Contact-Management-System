@@ -26,7 +26,7 @@ export default function ContactForm({ onSave, onCancel, initialData }) {
   // State for validation errors
   const [errors, setErrors] = useState({});
 
-  // Initialize form with data
+  // Initialize form with data when you press edit
   useEffect(() => {
     if (initialData) {
       // Fill form with existing contact data
